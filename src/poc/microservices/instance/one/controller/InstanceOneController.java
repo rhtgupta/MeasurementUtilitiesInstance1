@@ -6,11 +6,8 @@ import java.util.Map;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-
-import poc.microservices.instance.one.dto.User;
 
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
@@ -18,6 +15,12 @@ import com.hazelcast.core.HazelcastInstance;
 @RestController
 public class InstanceOneController {
 
+	private static final String METERINCH = "meterinch";
+	private static final String METERFEET = "meterfeet";
+	private static final String FEETINCH = "feetinch";
+	private static final String FEETMETER = "feetmeter";
+	public static final String INCHMETER = "inchmeter";
+	public static final String INCHFEET = "inchfeet";
 	private Map<String, Double> cachedConversion;
 
 	public InstanceOneController() {
@@ -25,7 +28,7 @@ public class InstanceOneController {
 		cachedConversion = instance.getMap("cachedConversion");
 	}
 
-	@RequestMapping(value = "/getUserConversionResult/{convertFromTextField}/{convertFrom}/{convertTo}", produces = "application/json")
+	@RequestMapping(value = "/getMeasurementConversionResult/{convertFromTextField}/{convertFrom}/{convertTo}", produces = "application/json")
 	public @ResponseBody double getUserConversionResult(
 			@PathVariable(value = "convertFromTextField") String convertFromTextFieldParam,
 			@PathVariable(value = "convertFrom") String convertFrom,
@@ -33,8 +36,6 @@ public class InstanceOneController {
 		String conversionKey = convertFrom + convertTo;
 		String cacheConversionKey = convertFromTextFieldParam + conversionKey;
 		double result = 0;
-		System.out.println("11111111111111111111111111111 "
-				+ convertFromTextFieldParam);
 
 		double convertFromTextField = Double.valueOf(convertFromTextFieldParam);
 
@@ -47,31 +48,31 @@ public class InstanceOneController {
 		}
 
 		switch (conversionKey) {
-		case "inchfeet": {
-			result = convertFromTextField * 0.083;
-
-			break;
-		}
-		case "inchmeter": {
-			result = convertFromTextField * 0.025;
-			break;
-		}
-		case "feetmeter": {
-			result = convertFromTextField * 0.304;
-			break;
-		}
-		case "feetinch": {
-			result = convertFromTextField * 12;
-			break;
-		}
-		case "meterfeet": {
-			result = convertFromTextField * 3.280;
-			break;
-		}
-		case "meterinch": {
-			result = convertFromTextField * 39.370;
-			break;
-		}
+			case INCHFEET: {
+				result = convertFromTextField * 0.083;
+	
+				break;
+			}
+			case INCHMETER: {
+				result = convertFromTextField * 0.025;
+				break;
+			}
+			case FEETMETER: {
+				result = convertFromTextField * 0.304;
+				break;
+			}
+			case FEETINCH: {
+				result = convertFromTextField * 12;
+				break;
+			}
+			case METERFEET: {
+				result = convertFromTextField * 3.280;
+				break;
+			}
+			case METERINCH: {
+				result = convertFromTextField * 39.370;
+				break;
+			}
 		}
 		double calculatedResult = new BigDecimal(result).setScale(2,
 				RoundingMode.HALF_UP).doubleValue();
