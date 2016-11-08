@@ -16,7 +16,9 @@ import com.hazelcast.core.HazelcastInstance;
 
 @RestController
 public class InstanceOneController {
-	
+
+	private static final String NO = "No";
+	private static final String YES = "Yes";
 	public static final String SERVER_NAME_KEY = "ServedBy";
 	public static final String SERVER_NAME_VALUE = "Server 1";
 	public static final String AVAILABLE_IN_CACHE_KEY = "AvaiilableInCache";
@@ -65,13 +67,13 @@ public class InstanceOneController {
 		resultObject.setServedBy(SERVER_NAME_VALUE);
 		double convertFromTextField = Double.valueOf(convertFromTextFieldParam);
 		if (convertFrom.equalsIgnoreCase(convertTo)) {
-			resultObject.setAvaiilableInCache("Yes");
+			resultObject.setAvaiilableInCache(YES);
 			resultObject.setResult(convertFromTextField);
 			return resultObject;
 		}
 
 		if (cachedConversion.get(cacheConversionKey) != null) {
-			resultObject.setAvaiilableInCache("Yes");
+			resultObject.setAvaiilableInCache(YES);
 			resultObject.setResult(cachedConversion.get(cacheConversionKey));
 			return resultObject;
 		}
@@ -129,28 +131,35 @@ public class InstanceOneController {
 		double calculatedResult = new BigDecimal(result).setScale(2,
 				RoundingMode.HALF_UP).doubleValue();
 		cachedConversion.put(cacheConversionKey, calculatedResult);
-		resultObject.setAvaiilableInCache("No");
+		resultObject.setAvaiilableInCache(NO);
 		resultObject.setResult(calculatedResult);
 		return resultObject;
 
 	}
 
 	@RequestMapping(value = "/getTemperatureConversionResult/{convertFromTextField}/{convertFrom}/{convertTo}", produces = "application/json")
-	public @ResponseBody double calculateTemperatureConversion(
+	public @ResponseBody Result calculateTemperatureConversion(
 			@PathVariable(value = "convertFromTextField") String convertFromTextFieldParam,
 			@PathVariable(value = "convertFrom") String convertFrom,
 			@PathVariable(value = "convertTo") String convertTo) {
 		String conversionKey = convertFrom + convertTo;
 		String cacheConversionKey = convertFromTextFieldParam + conversionKey;
 		double result = 0;
-
 		double convertFromTextField = Double.valueOf(convertFromTextFieldParam);
 
-		if (convertFrom.equalsIgnoreCase(convertTo))
-			return convertFromTextField;
+		Result resultObject = new Result();
+		resultObject.setServedBy(SERVER_NAME_VALUE);
+
+		if (convertFrom.equalsIgnoreCase(convertTo)) {
+			resultObject.setAvaiilableInCache(YES);
+			resultObject.setResult(convertFromTextField);
+			return resultObject;
+		}
 
 		if (cachedConversion.get(cacheConversionKey) != null) {
-			return cachedConversion.get(cacheConversionKey);
+			resultObject.setAvaiilableInCache(YES);
+			resultObject.setResult(cachedConversion.get(cacheConversionKey));
+			return resultObject;
 		}
 
 		switch (conversionKey) {
@@ -182,7 +191,10 @@ public class InstanceOneController {
 		double calculatedResult = new BigDecimal(result).setScale(2,
 				RoundingMode.HALF_UP).doubleValue();
 		cachedConversion.put(cacheConversionKey, calculatedResult);
-		return calculatedResult;
+
+		resultObject.setAvaiilableInCache(NO);
+		resultObject.setResult(calculatedResult);
+		return resultObject;
 	}
 
 }
