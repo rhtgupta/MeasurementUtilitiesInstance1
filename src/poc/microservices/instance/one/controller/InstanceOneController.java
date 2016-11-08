@@ -9,12 +9,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import poc.microservices.instance.one.dto.Result;
+
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 
 @RestController
 public class InstanceOneController {
-
+	
+	public static final String SERVER_NAME_KEY = "ServedBy";
+	public static final String SERVER_NAME_VALUE = "Server 1";
+	public static final String AVAILABLE_IN_CACHE_KEY = "AvaiilableInCache";
+	public static final String RESULT_KEY = "Result";
 	public static final String INCH_FOOT = "InchFoot";
 	public static final String INCH_CENTIMETRE = "InchCentimetre";
 	public static final String INCH_METRE = "InchMetre";
@@ -48,22 +54,26 @@ public class InstanceOneController {
 	}
 
 	@RequestMapping(value = "/getMeasurementConversionResult/{convertFromTextField}/{convertFrom}/{convertTo}", produces = "application/json")
-	public @ResponseBody double calculateMeasurementConversion(
+	public @ResponseBody Result getUserConversionResult(
 			@PathVariable(value = "convertFromTextField") String convertFromTextFieldParam,
 			@PathVariable(value = "convertFrom") String convertFrom,
 			@PathVariable(value = "convertTo") String convertTo) {
 		String conversionKey = convertFrom + convertTo;
 		String cacheConversionKey = convertFromTextFieldParam + conversionKey;
 		double result = 0;
-
+		Result resultObject = new Result();
+		resultObject.setServedBy(SERVER_NAME_VALUE);
 		double convertFromTextField = Double.valueOf(convertFromTextFieldParam);
-
-		if (convertFrom.equalsIgnoreCase(convertTo))
-			return convertFromTextField;
+		if (convertFrom.equalsIgnoreCase(convertTo)) {
+			resultObject.setAvaiilableInCache("Yes");
+			resultObject.setResult(convertFromTextField);
+			return resultObject;
+		}
 
 		if (cachedConversion.get(cacheConversionKey) != null) {
-			System.out.println("Server 1 from cache");
-			return cachedConversion.get(cacheConversionKey);
+			resultObject.setAvaiilableInCache("Yes");
+			resultObject.setResult(cachedConversion.get(cacheConversionKey));
+			return resultObject;
 		}
 
 		switch (conversionKey) {
@@ -119,8 +129,10 @@ public class InstanceOneController {
 		double calculatedResult = new BigDecimal(result).setScale(2,
 				RoundingMode.HALF_UP).doubleValue();
 		cachedConversion.put(cacheConversionKey, calculatedResult);
-		System.out.println("Server 1 Not in cache");
-		return calculatedResult;
+		resultObject.setAvaiilableInCache("No");
+		resultObject.setResult(calculatedResult);
+		return resultObject;
+
 	}
 
 	@RequestMapping(value = "/getTemperatureConversionResult/{convertFromTextField}/{convertFrom}/{convertTo}", produces = "application/json")
@@ -138,7 +150,6 @@ public class InstanceOneController {
 			return convertFromTextField;
 
 		if (cachedConversion.get(cacheConversionKey) != null) {
-			System.out.println("Server 1 from cache");
 			return cachedConversion.get(cacheConversionKey);
 		}
 
@@ -171,7 +182,6 @@ public class InstanceOneController {
 		double calculatedResult = new BigDecimal(result).setScale(2,
 				RoundingMode.HALF_UP).doubleValue();
 		cachedConversion.put(cacheConversionKey, calculatedResult);
-		System.out.println("Server 1 Not in cache");
 		return calculatedResult;
 	}
 
