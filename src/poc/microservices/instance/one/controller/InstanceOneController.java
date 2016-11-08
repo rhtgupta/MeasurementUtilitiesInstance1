@@ -15,12 +15,31 @@ import com.hazelcast.core.HazelcastInstance;
 @RestController
 public class InstanceOneController {
 
-	private static final String METERINCH = "meterinch";
-	private static final String METERFEET = "meterfeet";
-	private static final String FEETINCH = "feetinch";
-	private static final String FEETMETER = "feetmeter";
-	public static final String INCHMETER = "inchmeter";
-	public static final String INCHFEET = "inchfeet";
+	public static final String INCH_FOOT = "InchFoot";
+	public static final String INCH_CENTIMETRE = "InchCentimetre";
+	public static final String INCH_METRE = "InchMetre";
+
+	public static final String FOOT_INCH = "FootInch";
+	public static final String FOOT_CENTIMETRE = "FootCentimetre";
+	public static final String FOOT_METRE = "FootMetre";
+
+	public static final String CENTIMETRE_INCH = "CentimetreInch";
+	public static final String CENTIMETRE_FOOT = "CentimetreFoot";
+	public static final String CENTIMETRE_METRE = "CentimetreMetre";
+
+	public static final String METRE_INCH = "MetreInch";
+	public static final String METRE_FOOT = "MetreFoot";
+	public static final String METRE_CENTIMETRE = "MetreCentimetre";
+
+	public static final String CELSIUS_FAHRENHEIT = "CelsiusFahrenheit";
+	public static final String CELSIUS_KELVIN = "CelsiusKelvin";
+
+	public static final String FAHRENHEIT_CELSIUS = "FahrenheitCelsius";
+	public static final String FAHRENHEIT_KELVIN = "FahrenheitKelvin";
+
+	public static final String KELVIN_CELSIUS = "KelvinCelsius";
+	public static final String KELVIN_FAHRENHEIT = "KelvinFahrenheit";
+
 	private Map<String, Double> cachedConversion;
 
 	public InstanceOneController() {
@@ -29,7 +48,7 @@ public class InstanceOneController {
 	}
 
 	@RequestMapping(value = "/getMeasurementConversionResult/{convertFromTextField}/{convertFrom}/{convertTo}", produces = "application/json")
-	public @ResponseBody double getUserConversionResult(
+	public @ResponseBody double calculateMeasurementConversion(
 			@PathVariable(value = "convertFromTextField") String convertFromTextFieldParam,
 			@PathVariable(value = "convertFrom") String convertFrom,
 			@PathVariable(value = "convertTo") String convertTo) {
@@ -48,31 +67,106 @@ public class InstanceOneController {
 		}
 
 		switch (conversionKey) {
-			case INCHFEET: {
-				result = convertFromTextField * 0.083;
-	
-				break;
-			}
-			case INCHMETER: {
-				result = convertFromTextField * 0.025;
-				break;
-			}
-			case FEETMETER: {
-				result = convertFromTextField * 0.304;
-				break;
-			}
-			case FEETINCH: {
-				result = convertFromTextField * 12;
-				break;
-			}
-			case METERFEET: {
-				result = convertFromTextField * 3.280;
-				break;
-			}
-			case METERINCH: {
-				result = convertFromTextField * 39.370;
-				break;
-			}
+		case INCH_FOOT: {
+			result = convertFromTextField * 0.083;
+			break;
+		}
+		case INCH_CENTIMETRE: {
+			result = convertFromTextField * 2.54;
+			break;
+		}
+		case INCH_METRE: {
+			result = convertFromTextField * 0.025;
+			break;
+		}
+		case FOOT_INCH: {
+			result = convertFromTextField * 12;
+			break;
+		}
+		case FOOT_CENTIMETRE: {
+			result = convertFromTextField * 30.48;
+			break;
+		}
+		case FOOT_METRE: {
+			result = convertFromTextField * 0.3048;
+			break;
+		}
+		case CENTIMETRE_INCH: {
+			result = convertFromTextField * 0.393701;
+			break;
+		}
+		case CENTIMETRE_FOOT: {
+			result = convertFromTextField * 0.0328084;
+			break;
+		}
+		case CENTIMETRE_METRE: {
+			result = convertFromTextField * 0.01;
+			break;
+		}
+		case METRE_INCH: {
+			result = convertFromTextField * 39.3701;
+			break;
+		}
+		case METRE_FOOT: {
+			result = convertFromTextField * 3.28084;
+			break;
+		}
+		case METRE_CENTIMETRE: {
+			result = convertFromTextField * 100;
+			break;
+		}
+		}
+		double calculatedResult = new BigDecimal(result).setScale(2,
+				RoundingMode.HALF_UP).doubleValue();
+		cachedConversion.put(cacheConversionKey, calculatedResult);
+		System.out.println("Server 1 Not in cache");
+		return calculatedResult;
+	}
+
+	@RequestMapping(value = "/getTemperatureConversionResult/{convertFromTextField}/{convertFrom}/{convertTo}", produces = "application/json")
+	public @ResponseBody double calculateTemperatureConversion(
+			@PathVariable(value = "convertFromTextField") String convertFromTextFieldParam,
+			@PathVariable(value = "convertFrom") String convertFrom,
+			@PathVariable(value = "convertTo") String convertTo) {
+		String conversionKey = convertFrom + convertTo;
+		String cacheConversionKey = convertFromTextFieldParam + conversionKey;
+		double result = 0;
+
+		double convertFromTextField = Double.valueOf(convertFromTextFieldParam);
+
+		if (convertFrom.equalsIgnoreCase(convertTo))
+			return convertFromTextField;
+
+		if (cachedConversion.get(cacheConversionKey) != null) {
+			System.out.println("Server 1 from cache");
+			return cachedConversion.get(cacheConversionKey);
+		}
+
+		switch (conversionKey) {
+		case CELSIUS_FAHRENHEIT: {
+			result = convertFromTextField * 33.8;
+			break;
+		}
+		case CELSIUS_KELVIN: {
+			result = convertFromTextField * 274.15;
+			break;
+		}
+		case FAHRENHEIT_CELSIUS: {
+			result = convertFromTextField * -17.22;
+			break;
+		}
+		case FAHRENHEIT_KELVIN: {
+			result = convertFromTextField * 255.92;
+			break;
+		}
+		case KELVIN_CELSIUS: {
+			result = convertFromTextField * -272.15;
+			break;
+		}
+		case KELVIN_FAHRENHEIT: {
+			result = convertFromTextField * -457.87;
+			break;
+		}
 		}
 		double calculatedResult = new BigDecimal(result).setScale(2,
 				RoundingMode.HALF_UP).doubleValue();
