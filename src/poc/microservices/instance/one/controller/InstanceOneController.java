@@ -65,15 +65,19 @@ public class InstanceOneController {
 		double result = 0;
 		Result resultObject = new Result();
 		resultObject.setServedBy(SERVER_NAME_VALUE);
+		resultObject.setConvertFromTextField(convertFromTextFieldParam);
+		resultObject.setConvertFrom(convertFrom);
+		resultObject.setConvertTo(convertTo);
+
 		double convertFromTextField = Double.valueOf(convertFromTextFieldParam);
 		if (convertFrom.equalsIgnoreCase(convertTo)) {
-			resultObject.setAvaiilableInCache(YES);
+			resultObject.setAvailableInCache(YES);
 			resultObject.setResult(convertFromTextField);
 			return resultObject;
 		}
 
 		if (cachedConversion.get(cacheConversionKey) != null) {
-			resultObject.setAvaiilableInCache(YES);
+			resultObject.setAvailableInCache(YES);
 			resultObject.setResult(cachedConversion.get(cacheConversionKey));
 			return resultObject;
 		}
@@ -131,7 +135,7 @@ public class InstanceOneController {
 		double calculatedResult = new BigDecimal(result).setScale(2,
 				RoundingMode.HALF_UP).doubleValue();
 		cachedConversion.put(cacheConversionKey, calculatedResult);
-		resultObject.setAvaiilableInCache(NO);
+		resultObject.setAvailableInCache(NO);
 		resultObject.setResult(calculatedResult);
 		return resultObject;
 
@@ -149,15 +153,18 @@ public class InstanceOneController {
 
 		Result resultObject = new Result();
 		resultObject.setServedBy(SERVER_NAME_VALUE);
+		resultObject.setConvertFromTextField(convertFromTextFieldParam);
+		resultObject.setConvertFrom(convertFrom);
+		resultObject.setConvertTo(convertTo);
 
 		if (convertFrom.equalsIgnoreCase(convertTo)) {
-			resultObject.setAvaiilableInCache(YES);
+			resultObject.setAvailableInCache(YES);
 			resultObject.setResult(convertFromTextField);
 			return resultObject;
 		}
 
 		if (cachedConversion.get(cacheConversionKey) != null) {
-			resultObject.setAvaiilableInCache(YES);
+			resultObject.setAvailableInCache(YES);
 			resultObject.setResult(cachedConversion.get(cacheConversionKey));
 			return resultObject;
 		}
@@ -192,7 +199,7 @@ public class InstanceOneController {
 				RoundingMode.HALF_UP).doubleValue();
 		cachedConversion.put(cacheConversionKey, calculatedResult);
 
-		resultObject.setAvaiilableInCache(NO);
+		resultObject.setAvailableInCache(NO);
 		resultObject.setResult(calculatedResult);
 		return resultObject;
 	}
