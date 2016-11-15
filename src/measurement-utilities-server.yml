@@ -11,5 +11,4 @@ eureka:
 
 # HTTP Server
 server:
-  port: 2222   # HTTP (Tomcat) port
-  name: Instance 1
+  port: 5555   # HTTP (Tomcat) port
