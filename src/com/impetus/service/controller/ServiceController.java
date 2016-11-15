@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hazelcast.core.Hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.impetus.service.dto.ConversionInfo;
-import com.impetus.service.service.impl.MeasurmentConversionImpl;
-import com.impetus.service.service.impl.TemperatureConversionImpl;
+import com.impetus.service.impl.MeasurmentConversionImpl;
+import com.impetus.service.impl.TemperatureConversionImpl;
 
 @RestController
 public class ServiceController {

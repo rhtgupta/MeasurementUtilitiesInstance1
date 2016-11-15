@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@ComponentScan(basePackages = { "com.impetus.service.controller", "com.impetus.service.service.impl" })
+@ComponentScan(basePackages = { "com.impetus.service.controller", "com.impetus.service.impl" })
 public class ServiceMain {
 
 	public static void main(String[] args) {

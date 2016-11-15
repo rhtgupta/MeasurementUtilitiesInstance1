@@ -1,4 +1,4 @@
-package com.impetus.service.service.impl;
+package com.impetus.service.impl;
 
 import static com.impetus.service.common.Constants.CELSIUS_FAHRENHEIT;
 import static com.impetus.service.common.Constants.CELSIUS_KELVIN;
