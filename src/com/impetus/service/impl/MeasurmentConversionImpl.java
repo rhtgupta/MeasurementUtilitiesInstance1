@@ -17,6 +17,8 @@ import static com.impetus.service.common.Constants.YES;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -27,8 +29,8 @@ import com.impetus.service.dto.ConversionInfo;
 @Service
 public class MeasurmentConversionImpl {
 
-	@Value("${server.name}")
-	private String serverName;
+	@Value("${server.port}")
+	private String port;
 
 	public ConversionInfo convert(ConversionInfo request,
 			Map<String, Double> cachedMap) {
@@ -37,7 +39,12 @@ public class MeasurmentConversionImpl {
 		String conversionKey = request.getFrom() + request.getTo();
 		String cacheConversionKey = request.getConvert() + conversionKey;
 		ConversionInfo response = new ConversionInfo();
-		response.setServedBy(serverName);
+		try {
+			response.setServedBy(InetAddress.getLocalHost().getHostName()
+					+ " : " + port);
+		} catch (UnknownHostException e) {
+			// implement logger here.
+		}
 		response.setConvert(request.getConvert());
 		response.setFrom(request.getFrom());
 		response.setTo(request.getTo());

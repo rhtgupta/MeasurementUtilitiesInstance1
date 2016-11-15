@@ -53,7 +53,7 @@ public class ServiceController {
 			@PathVariable(value = "convert") String convert,
 			@PathVariable(value = "from") String from,
 			@PathVariable(value = "to") String to) {
-		logger.info("Serving temperature request, convert " + convert + " " + from + "to "
+		logger.info("Serving temperature request, convert " + convert + " " + from + "-to-"
 				+ to);
 		ConversionInfo conversionInfo = new ConversionInfo();
 		conversionInfo.setConvert(convert);
