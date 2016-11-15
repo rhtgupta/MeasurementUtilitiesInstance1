@@ -21,46 +21,46 @@ import com.impetus.utility.service.ConversionAbstract;
 public class MeasurmentConversionImpl extends ConversionAbstract {
 
 	@Override
-	public double getMultiplicationFactor(String conversionKey) {
+	public double getConvertedResult(String conversionKey, double input) {
 
 		switch (conversionKey) {
 		case INCH_FOOT:
-			return 0.083;
+			return input * 0.083;
 
 		case INCH_CENTIMETRE:
-			return 2.54;
+			return input * 2.54;
 
 		case INCH_METRE:
-			return 0.025;
+			return input * 0.025;
 
 		case FOOT_INCH:
-			return 12;
+			return input * 12;
 
 		case FOOT_CENTIMETRE:
-			return 30.48;
+			return input * 30.48;
 
 		case FOOT_METRE:
-			return 0.3048;
+			return input * 0.3048;
 
 		case CENTIMETRE_INCH:
-			return 0.393701;
+			return input * 0.393701;
 
 		case CENTIMETRE_FOOT:
-			return 0.0328084;
+			return input * 0.0328084;
 
 		case CENTIMETRE_METRE:
-			return 0.01;
+			return input * 0.01;
 
 		case METRE_INCH:
-			return 39.3701;
+			return input * 39.3701;
 
 		case METRE_FOOT:
-			return 3.28084;
+			return input * 3.28084;
 
 		case METRE_CENTIMETRE:
-			return 100;
+			return input * 100;
 		default:
-			return 1.00;
+			return input;
 
 		}
 	}

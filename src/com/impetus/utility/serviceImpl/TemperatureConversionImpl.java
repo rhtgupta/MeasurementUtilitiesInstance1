@@ -15,25 +15,25 @@ import com.impetus.utility.service.ConversionAbstract;
 public class TemperatureConversionImpl extends ConversionAbstract {
 
 	@Override
-	public double getMultiplicationFactor(String conversionKey) {
+	public double getConvertedResult(String conversionKey, double input) {
 		switch (conversionKey) {
 		case CELSIUS_FAHRENHEIT:
-			return 33.80;
+			return (input * 9 / 5) + 32;
 
 		case CELSIUS_KELVIN:
-			return 274.15;
+			return input + 273.15;
 
 		case FAHRENHEIT_CELSIUS:
-			return -17.22;
+			return (input - 32) * 5 / 9;
 
 		case FAHRENHEIT_KELVIN:
-			return 255.92;
+			return (input - 32) * 5 / 9 + 273.15;
 
 		case KELVIN_CELSIUS:
-			return -272.15;
+			return input - 273.15;
 
 		case KELVIN_FAHRENHEIT:
-			return -457.87;
+			return (input - 273.15) * 9 / 5 + 32;
 
 		default:
 			return 1.00;

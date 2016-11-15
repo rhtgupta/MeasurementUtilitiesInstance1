@@ -22,7 +22,7 @@ public abstract class ConversionAbstract {
 
 	private Logger logger = LoggerFactory.getLogger(ConversionAbstract.class);
 
-	public abstract double getMultiplicationFactor(String conversionKey);
+	public abstract double getConvertedResult(String conversionKey, double input);
 
 	public ConversionInfo populateConversionResult(ConversionInfo request,
 			Map<String, Double> cachedMap) {
@@ -42,8 +42,12 @@ public abstract class ConversionAbstract {
 		if (isAvailableInCache(cacheConversionKey, cachedMap, request))
 			return request;
 		logger.info("Same request result is Not available in cache, So will calculate it & put it in cache");
-		return calculate(cacheConversionKey, cacheConversionKey,
-				getMultiplicationFactor(conversionKey), cachedMap, request);
+		return calculate(
+				cacheConversionKey,
+				cacheConversionKey,
+				getConvertedResult(conversionKey,
+						Double.valueOf(request.getConvert())), cachedMap,
+				request);
 	}
 
 	private boolean isConversionUnitSame(ConversionInfo request) {
@@ -66,11 +70,10 @@ public abstract class ConversionAbstract {
 	}
 
 	private ConversionInfo calculate(String cacheConversionKey,
-			String conversionKey, double multiplicationFactor,
+			String conversionKey, double calculatedResult,
 			Map<String, Double> cachedMap, ConversionInfo request) {
 		logger.info("Entring calculate method");
-		double formattedOutput = new BigDecimal(Double.valueOf(request
-				.getConvert()) * multiplicationFactor).setScale(2,
+		double formattedOutput = new BigDecimal(calculatedResult).setScale(2,
 				RoundingMode.HALF_UP).doubleValue();
 		logger.info("Put formatted output in cache with key "
 				+ cacheConversionKey);
