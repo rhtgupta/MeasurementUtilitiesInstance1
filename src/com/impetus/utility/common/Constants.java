@@ -1,11 +1,9 @@
-package com.impetus.service.common;
+package com.impetus.utility.common;
 
 public class Constants {
 	public static final String NO = "No";
 	public static final String YES = "Yes";
-	public static final String SERVER_NAME_KEY = "ServedBy";
-	public static final String AVAILABLE_IN_CACHE_KEY = "AvaiilableInCache";
-	public static final String RESULT_KEY = "Result";
+
 	public static final String INCH_FOOT = "InchFoot";
 	public static final String INCH_CENTIMETRE = "InchCentimetre";
 	public static final String INCH_METRE = "InchMetre";
@@ -30,4 +28,7 @@ public class Constants {
 
 	public static final String KELVIN_CELSIUS = "KelvinCelsius";
 	public static final String KELVIN_FAHRENHEIT = "KelvinFahrenheit";
+
+	public static final String CONVERSION_TYPE_MEASUREMENT = "measurement";
+	public static final String CONVERSION_TYPE_TEMPERATURE = "temperature";
 }

@@ -1,4 +1,4 @@
-package com.impetus.service.dto;
+package com.impetus.utility.dto;
 
 public class ConversionInfo {
 

@@ -1,4 +1,4 @@
-package com.impetus.service.main;
+package com.impetus.utility.main;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -7,7 +7,8 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@ComponentScan(basePackages = { "com.impetus.service.controller", "com.impetus.service.impl" })
+@ComponentScan(basePackages = { "com.impetus.utility.controller",
+		"com.impetus.utility.serviceImpl" })
 public class ServiceMain {
 
 	public static void main(String[] args) {
