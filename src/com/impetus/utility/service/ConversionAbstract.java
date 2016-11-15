@@ -11,10 +11,14 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 import com.impetus.utility.dto.ConversionInfo;
 
 public abstract class ConversionAbstract {
+
+	@Value("${server.port}")
+	private String serverPort;
 
 	private Logger logger = LoggerFactory.getLogger(ConversionAbstract.class);
 
@@ -24,9 +28,9 @@ public abstract class ConversionAbstract {
 			Map<String, Double> cachedMap) {
 		String conversionKey = request.getFrom().concat(request.getTo());
 		String cacheConversionKey = request.getConvert().concat(conversionKey);
-
 		try {
-			request.setServedBy(InetAddress.getLocalHost().getHostName());
+			request.setServedBy(InetAddress.getLocalHost().getHostName()
+					+ " : " + serverPort);
 		} catch (UnknownHostException e) {
 			logger.info("Supressing exception & printing stacktrace ");
 			e.printStackTrace();
