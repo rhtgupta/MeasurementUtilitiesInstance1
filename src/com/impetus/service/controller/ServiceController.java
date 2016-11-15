@@ -2,6 +2,8 @@ package com.impetus.service.controller;
 
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,10 +23,13 @@ public class ServiceController {
 	private MeasurmentConversionImpl measurmentConversionImpl;
 	@Autowired
 	private TemperatureConversionImpl temperatureConversionImpl;
+	
+	private Logger logger = LoggerFactory.getLogger(ServiceController.class);
 
 	private Map<String, Double> cachedMap;
 
 	public ServiceController() {
+		logger.info("Creating new instance of Hazelcast cache");
 		HazelcastInstance instance = Hazelcast.newHazelcastInstance();
 		cachedMap = instance.getMap("cachedConversion");
 	}
@@ -34,6 +39,8 @@ public class ServiceController {
 			@PathVariable(value = "convert") String convert,
 			@PathVariable(value = "from") String from,
 			@PathVariable(value = "to") String to) {
+		logger.info("Serving measurement request, convert " + convert + " " + from + "to "
+				+ to);
 		ConversionInfo conversionInfo = new ConversionInfo();
 		conversionInfo.setConvert(convert);
 		conversionInfo.setFrom(from);
@@ -46,6 +53,8 @@ public class ServiceController {
 			@PathVariable(value = "convert") String convert,
 			@PathVariable(value = "from") String from,
 			@PathVariable(value = "to") String to) {
+		logger.info("Serving temperature request, convert " + convert + " " + from + "to "
+				+ to);
 		ConversionInfo conversionInfo = new ConversionInfo();
 		conversionInfo.setConvert(convert);
 		conversionInfo.setFrom(from);
