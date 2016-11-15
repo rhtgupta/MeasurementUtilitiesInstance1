@@ -9,9 +9,14 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.impetus.utility.dto.ConversionInfo;
 
 public abstract class ConversionAbstract {
+
+	private Logger logger = LoggerFactory.getLogger(ConversionAbstract.class);
 
 	public abstract double getMultiplicationFactor(String conversionKey);
 
@@ -23,15 +28,16 @@ public abstract class ConversionAbstract {
 		try {
 			request.setServedBy(InetAddress.getLocalHost().getHostName());
 		} catch (UnknownHostException e) {
-			// implement logger here.
+			logger.info("Supressing exception & printing stacktrace ");
+			e.printStackTrace();
 		}
 
 		if (isConversionUnitSame(request))
 			return request;
-
+		logger.info("Check whether same request is already available in cache ?");
 		if (isAvailableInCache(cacheConversionKey, cachedMap, request))
 			return request;
-
+		logger.info("Same request result is Not available in cache, So will calculate it & put it in cache");
 		return calculate(cacheConversionKey, cacheConversionKey,
 				getMultiplicationFactor(conversionKey), cachedMap, request);
 	}
@@ -39,6 +45,7 @@ public abstract class ConversionAbstract {
 	private boolean isConversionUnitSame(ConversionInfo request) {
 		if (!request.getFrom().equalsIgnoreCase(request.getTo()))
 			return false;
+		logger.info("Convert unit to & from are same so just returning the input as output");
 		request.setAvailableInCache(YES);
 		request.setOutput(Double.valueOf(request.getConvert()));
 		return true;
@@ -48,6 +55,7 @@ public abstract class ConversionAbstract {
 			Map<String, Double> cachedMap, ConversionInfo request) {
 		if (cachedMap.get(cacheConversionKey) == null)
 			return false;
+		logger.info("Same request result is already available in cache, So returing the output from cache");
 		request.setAvailableInCache(YES);
 		request.setOutput(cachedMap.get(cacheConversionKey));
 		return true;
@@ -56,10 +64,12 @@ public abstract class ConversionAbstract {
 	private ConversionInfo calculate(String cacheConversionKey,
 			String conversionKey, double multiplicationFactor,
 			Map<String, Double> cachedMap, ConversionInfo request) {
-
+		logger.info("Entring calculate method");
 		double formattedOutput = new BigDecimal(Double.valueOf(request
 				.getConvert()) * multiplicationFactor).setScale(2,
 				RoundingMode.HALF_UP).doubleValue();
+		logger.info("Put formatted output in cache with key "
+				+ cacheConversionKey);
 		cachedMap.put(cacheConversionKey, formattedOutput);
 		request.setAvailableInCache(NO);
 		request.setOutput(formattedOutput);
